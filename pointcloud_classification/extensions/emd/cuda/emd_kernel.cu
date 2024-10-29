@@ -5,7 +5,7 @@
 
 #ifndef _EMD_KERNEL
 #define _EMD_KERNEL
-
+#endif
 #include <cmath>
 #include <vector>
 

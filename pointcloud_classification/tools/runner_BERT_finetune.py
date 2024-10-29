@@ -10,7 +10,7 @@ import numpy as np
 from datasets import data_transforms
 from pointnet2_ops import pointnet2_utils
 from torchvision import transforms
-
+from tqdm import tqdm
 
 train_transforms = transforms.Compose(
     [
@@ -90,7 +90,7 @@ def run_net(args, config, train_writer=None, val_writer=None):
 
 
     base_model.zero_grad()
-    for epoch in range(start_epoch, config.max_epoch + 1):
+    for epoch in tqdm(range(start_epoch, config.max_epoch + 1)):
         if args.distributed:
             train_sampler.set_epoch(epoch)
         base_model.train()

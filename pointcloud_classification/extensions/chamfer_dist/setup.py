@@ -16,4 +16,4 @@ setup(name='chamfer',
               'chamfer.cu',
           ]),
       ],
-      cmdclass={'build_ext': BuildExtension})
+      cmdclass={'build_ext': BuildExtension.with_options(use_ninja=False)})
