@@ -221,7 +221,7 @@ def validate(base_model, test_dataloader, epoch, val_writer, args, config, logge
     test_label = []
     npoints = config.npoints
     with torch.no_grad():
-        for idx, (taxonomy_ids, model_ids, data) in enumerate(test_dataloader):
+        for idx, (taxonomy_ids, model_ids, data) in tqdm(enumerate(test_dataloader)):
             points = data[0].cuda()
             label = data[1].cuda()
 
