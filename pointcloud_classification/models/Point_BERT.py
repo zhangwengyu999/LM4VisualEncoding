@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torchvision import models
 import timm
 from pathlib import Path
 from timm.models.layers import DropPath, trunc_normal_
@@ -159,6 +160,30 @@ class PointTransformer(nn.Module):
             self.llama_dim_mapper1 = nn.Linear(config.trans_dim, 4096, bias=False)
             self.llama_dim_mapper2 = nn.Linear(4096, config.trans_dim, bias=False)
 
+        if hasattr(config, 'only_mlp') and config.only_mlp:
+            print(config.only_mlp_cfg)
+            self.only_mlp_list = nn.ModuleList()
+            for i in range(config.only_mlp_cfg.only_mlp_n):
+                dim_in = config.only_mlp_cfg[f"only_mlp_l{i}"].dim_in
+                dim_out = config.only_mlp_cfg[f"only_mlp_l{i}"].dim_out
+                self.only_mlp_list.append(nn.Linear(dim_in, dim_out, bias=False))
+                
+            assert len(self.only_mlp_list) == config.only_mlp_cfg.only_mlp_n
+            
+        if hasattr(config, 'use_vgg') and config.use_vgg:
+            vgg_type = getattr(config, 'vgg_type', 'vgg16')  # Default to 'vgg16' if not specified
+            self.vgg_type = vgg_type
+            self.vgg = getattr(models, vgg_type)(pretrained=True)
+            for param in self.vgg.parameters():
+                param.requires_grad = False  # Freeze VGG parameters
+            
+            # Add a linear layer to reduce channels from input_dim to 3 for VGG
+            self.channel_reducer = nn.Linear(config.trans_dim, 3)  # Assuming input channels are trans_dim
+            
+            # Mapper from VGG output to model's trans_dim
+            self.vgg_dim_mapper = nn.Linear(1000, self.trans_dim)  # Map VGG's 1000-dim output to trans_dim
+
+
         self.build_loss_func()
         
     def build_loss_func(self):
@@ -219,6 +244,12 @@ class PointTransformer(nn.Module):
             checkpoint = torch.load(ckpt_path, map_location="cpu")
             self.llama.custom_load_state_dict(checkpoint, tail=True, strict=False)
             print_log("Loading LLaMA Done", logger = 'LLaMA')
+        
+        if hasattr(self.config, 'only_mlp') and hasattr(self.config, 'only_mlp_cfg') and self.config.only_mlp:
+            print_log(f"Initialize the {self.config.only_mlp_cfg.only_mlp_n} only mlp layer done", logger = 'Transformer')
+
+        if hasattr(self.config, 'use_vgg') and self.config.use_vgg:
+            print_log(f"Initialize the {self.vgg_type} layer done", logger = 'Transformer')
 
         print_log(f'[Transformer] Successful Loading the ckpt from {bert_ckpt_path}', logger = 'Transformer')
 
@@ -244,6 +275,39 @@ class PointTransformer(nn.Module):
             x = self.llama_dim_mapper1(x)
             x = self.llama(x)
             x = self.llama_dim_mapper2(x)
+
+        if hasattr(self.config, 'only_mlp') and self.config.only_mlp:
+            for only_mlp_layer in self.only_mlp_list:
+                x = only_mlp_layer(x)
+
+        if hasattr(self.config, 'use_vgg') and self.config.use_vgg:
+            # print(f"x.shape: {x.shape}")  # [batch_size, seq_len, channels]
+
+            # Step 1: Dynamically get sequence length
+            batch_size, seq_len, channels = x.shape
+
+            # Step 2: Use channel reducer to map input channels to 3
+            x_reshaped = x.permute(0, 2, 1)  # Change to (batch_size, channels, seq_len)
+            # print(f"x_reshaped.shape: {x_reshaped.shape}")  # [batch_size, channels, seq_len]
+            x_reduced = self.channel_reducer(x_reshaped.permute(0, 2, 1))  # (batch_size, seq_len, channels) -> (batch_size, seq_len, 3)
+            # print(f"x_reduced.shape: {x_reduced.shape}")  # [batch_size, seq_len, 3]
+
+            # Step 3: Reshape and resize for VGG input
+            x_reduced = x_reduced.permute(0, 2, 1).unsqueeze(-1)  # Change to (batch_size, 3, seq_len, 1)
+            x_resized = nn.functional.interpolate(x_reduced, size=(224, 224), mode='bilinear', align_corners=False)
+            # print(f"x_resized.shape: {x_resized.shape}")  # [batch_size, 3, 224, 224]
+
+            # Step 4: Process through VGG
+            vgg_out = self.vgg(x_resized)
+            # print(f"vgg_out.shape: {vgg_out.shape}")  # [batch_size, 1000] for VGG16
+
+            # Step 5: Map VGG output to model's trans_dim
+            vgg_out = self.vgg_dim_mapper(vgg_out)
+            # print(f"vgg_dim_mapper.shape: {vgg_out.shape}")  # [batch_size, trans_dim]
+
+            # Step 6: Expand dynamically based on the sequence length
+            x = vgg_out.unsqueeze(1).expand(-1, seq_len, -1)  # Repeat along the sequence dimension
+            # print(f"x.shape: {x.shape}")  # [batch_size, seq_len, trans_dim]
 
         x = self.norm(x)
         concat_f = torch.cat([x[:,0], x[:, 1:].max(1)[0]], dim = -1)
