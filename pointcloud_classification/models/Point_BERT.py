@@ -287,9 +287,8 @@ class PointTransformer(nn.Module):
             batch_size, seq_len, channels = x.shape
 
             # Step 2: Use channel reducer to map input channels to 3
-            x_reshaped = x.permute(0, 2, 1)  # Change to (batch_size, channels, seq_len)
             # print(f"x_reshaped.shape: {x_reshaped.shape}")  # [batch_size, channels, seq_len]
-            x_reduced = self.channel_reducer(x_reshaped.permute(0, 2, 1))  # (batch_size, seq_len, channels) -> (batch_size, seq_len, 3)
+            x_reduced = self.channel_reducer(x)  # (batch_size, seq_len, channels) -> (batch_size, seq_len, 3)
             # print(f"x_reduced.shape: {x_reduced.shape}")  # [batch_size, seq_len, 3]
 
             # Step 3: Reshape and resize for VGG input

@@ -161,6 +161,30 @@ CUDA_VISIBLE_DEVICES=3 bash scripts/train.sh configs/ModelNet_models/PointTransf
 CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointTransformer_8192point_vgg16.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointTransformer_8192point_vgg16/ModelNet_models/PointTransformer_ModelNet40_8k_VGG16/ckpt-best.pth
 92.5446
 
+
+## ModelNet40 + VGG19
+
+### ModelNet40 1k VGG19 [DONE]
+CUDA_VISIBLE_DEVICES=0 bash scripts/train.sh configs/ModelNet_models/PointTransformer_vgg19.yaml PointTransformer_ModelNet40_1k_VGG19
+
+#### eval [DONE]
+CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointTransformer_vgg19.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointTransformer_vgg19/ModelNet_models/PointTransformer_ModelNet40_1k_VGG19/ckpt-best.pth
+92.5851
+
+### ModelNet40 4k VGG19 [DONE]
+CUDA_VISIBLE_DEVICES=1 bash scripts/train.sh configs/ModelNet_models/PointTransformer_4096point_vgg19.yaml PointTransformer_ModelNet40_4k_VGG19
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=1 bash scripts/eval.sh configs/ModelNet_models/PointTransformer_4096point_vgg19.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointTransformer_4096point_vgg19/ModelNet_models/PointTransformer_ModelNet40_4k_VGG19/ckpt-best.pth
+92.6661
+
+### ModelNet40 8k VGG19 [DONE]
+CUDA_VISIBLE_DEVICES=2 bash scripts/train.sh configs/ModelNet_models/PointTransformer_8192point_vgg19.yaml PointTransformer_ModelNet40_8k_VGG19
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=2 bash scripts/eval.sh configs/ModelNet_models/PointTransformer_8192point_vgg19.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointTransformer_8192point_vgg19/ModelNet_models/PointTransformer_ModelNet40_8k_VGG19/ckpt-best.pth
+
+
 ## ModelNet40 + Mamba
 
 ### ModelNet40 1k Mamba 1l [DONE]
