@@ -189,17 +189,29 @@ CUDA_VISIBLE_DEVICES=2 bash scripts/eval.sh configs/ModelNet_models/PointTransfo
 
 ### ModelNet40 1k Mamba 1l [DONE]
 CUDA_VISIBLE_DEVICES=2 bash scripts/train.sh configs/ModelNet_models/PointMamba_1.yaml PointMamba_ModelNet40_1k_Mamba_1l
+CUDA_VISIBLE_DEVICES=0 bash scripts/train.sh configs/ModelNet_models/PointMamba_1.yaml PointMamba_ModelNet40_1k_Mamba_1l_test
+
+[DONE]
+CUDA_VISIBLE_DEVICES=2 bash scripts/train.sh configs/ModelNet_models/PointMamba_1_16bs.yaml PointMamba_ModelNet40_1k_Mamba_1l_16bs
 
 #### eval [DONE]
 CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_1.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_1/ModelNet_models/PointMamba_ModelNet40_1k_Mamba_1l/ckpt-best.pth
 89.1815
 
+CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_1_16bs.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_1_16bs/ModelNet_models/PointMamba_ModelNet40_1k_Mamba_1l_16bs/ckpt-best.pth
+
 ### ModelNet40 1k Mamba 2l [DONE]
 CUDA_VISIBLE_DEVICES=2 bash scripts/train.sh configs/ModelNet_models/PointMamba_2.yaml PointMamba_ModelNet40_1k_Mamba_2l
+
+[DONE]
+CUDA_VISIBLE_DEVICES=1 bash scripts/train.sh configs/ModelNet_models/PointMamba_2_16bs.yaml PointMamba_ModelNet40_1k_Mamba_2l_16bs
 
 #### eval [DONE]
 CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_2.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_2/ModelNet_models/PointMamba_ModelNet40_1k_Mamba_2l/ckpt-best.pth
 90.1945
+
+CUDA_VISIBLE_DEVICES=1 bash scripts/eval.sh configs/ModelNet_models/PointMamba_2_16bs.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_2_16bs/ModelNet_models/PointMamba_ModelNet40_1k_Mamba_2l_16bs/ckpt-best.pth
+89.9514
 
 ### ModelNet40 1k Mamba 3l [DONE]
 CUDA_VISIBLE_DEVICES=3 bash scripts/train.sh configs/ModelNet_models/PointMamba_3.yaml PointMamba_ModelNet40_1k_Mamba_3l
@@ -251,6 +263,77 @@ CUDA_VISIBLE_DEVICES=1 bash scripts/eval.sh configs/ModelNet_models/PointMamba_8
 
 ### ModelNet40 8k Mamba 3l [RUNNING]
 CUDA_VISIBLE_DEVICES=3 bash scripts/train.sh configs/ModelNet_models/PointMamba_8192point_3.yaml PointMamba_ModelNet40_8k_Mamba_3l
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=1 bash scripts/eval.sh configs/ModelNet_models/PointMamba_8192point_3.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_8192point_3/ModelNet_models/PointMamba_ModelNet40_8k_Mamba_3l/ckpt-best.pth
+
+
+## ModelNet40 + Mamba + LLM
+
+### ModelNet40 1k Mamba 1l [DONE]
+CUDA_VISIBLE_DEVICES=0 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_llama_1.yaml PointMamba_ModelNet40_1k_Mamba_llama_1l
+
+#### eval [DONE]
+CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_llama/PointMamba_llama_1.yaml /mnt1/wengyu/method/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_llama_1/PointMamba_llama/PointMamba_ModelNet40_1k_Mamba_llama_1l/ckpt-best.pth
+89.8298
+
+### ModelNet40 1k Mamba 2l [DONE]
+CUDA_VISIBLE_DEVICES=0 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_llama_2.yaml PointMamba_ModelNet40_1k_Mamba_llama_2l
+
+#### eval [DONE]
+CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_llama/PointMamba_llama_2.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_llama_2/PointMamba_llama/PointMamba_ModelNet40_1k_Mamba_llama_2l/ckpt-best.pth
+89.7083
+
+### ModelNet40 1k Mamba 3l [TODO]
+CUDA_VISIBLE_DEVICES=2 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_llama_3.yaml PointMamba_ModelNet40_1k_Mamba_llama_3l
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_3.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_3/ModelNet_models/PointMamba_ModelNet40_1k_Mamba_3l/ckpt-best.pth
+89.7488
+
+
+
+### ModelNet40 4k Mamba 1l [RUNNING]
+CUDA_VISIBLE_DEVICES=1 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_4096point_llama_1.yaml PointMamba_ModelNet40_4k_Mamba_llama_1l
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_llama/PointMamba_4096point_llama_1.yaml /mnt1/wengyu/method/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_4096point_llama_1/PointMamba_llama/PointMamba_ModelNet40_4k_Mamba_llama_1l/ckpt-best.pth
+
+
+### ModelNet40 4k Mamba 2l [TODO]
+CUDA_VISIBLE_DEVICES=0 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_4096point_llama_2.yaml PointMamba_ModelNet40_4k_Mamba_llama_2l
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_4096point_2.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_4096point_2/ModelNet_models/PointMamba_ModelNet40_4k_Mamba_2l/ckpt-best.pth
+89.5057
+
+### ModelNet40 4k Mamba 3l [TODO]
+CUDA_VISIBLE_DEVICES=1 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_4096point_llama_3.yaml PointMamba_ModelNet40_4k_Mamba_llama_3l
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=0 bash scripts/eval.sh configs/ModelNet_models/PointMamba_4096point_3.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_4096point_3/ModelNet_models/PointMamba_ModelNet40_4k_Mamba_3l/ckpt-best.pth
+89.1410
+
+
+
+
+### ModelNet40 8k Mamba 1l [TODO]
+CUDA_VISIBLE_DEVICES=2 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_8192point_llama_1.yaml PointMamba_ModelNet40_8k_Mamba_llama_1l
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=1 bash scripts/eval.sh configs/ModelNet_models/PointMamba_8192point_1.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_8192point_1/ModelNet_models/PointMamba_ModelNet40_8k_Mamba_1l/ckpt-best.pth
+88.6143
+
+### ModelNet40 8k Mamba 2l [TODO]
+CUDA_VISIBLE_DEVICES=2 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_8192point_llama_2.yaml PointMamba_ModelNet40_8k_Mamba_llama_2l
+
+#### eval [TODO]
+CUDA_VISIBLE_DEVICES=1 bash scripts/eval.sh configs/ModelNet_models/PointMamba_8192point_2.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_8192point_2/ModelNet_models/PointMamba_ModelNet40_8k_Mamba_2l/ckpt-best.pth
+89.2220
+
+
+### ModelNet40 8k Mamba 3l [TODO]
+CUDA_VISIBLE_DEVICES=3 bash scripts/train.sh configs/ModelNet_models/PointMamba_llama/PointMamba_8192point_llama_3.yaml PointMamba_ModelNet40_8k_Mamba_llama_3l
 
 #### eval [TODO]
 CUDA_VISIBLE_DEVICES=1 bash scripts/eval.sh configs/ModelNet_models/PointMamba_8192point_3.yaml /home/wengyu/work/LM4VisualEncoding/pointcloud_classification/experiments/PointMamba_8192point_3/ModelNet_models/PointMamba_ModelNet40_8k_Mamba_3l/ckpt-best.pth

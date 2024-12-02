@@ -160,10 +160,12 @@ class PointMamba(nn.Module):
         for block in self.blocks:
             x = block(x)
         # print(">>>4 ", x.shape)
-        # if hasattr(self.config, 'use_llama') and self.config.use_llama:
-        #     x = self.llama_dim_mapper1(x)
-        #     x = self.llama(x)
-        #     x = self.llama_dim_mapper2(x)
+        
+        if hasattr(self.config, 'use_llama') and self.config.use_llama:
+            x = self.llama_dim_mapper1(x)
+            x = self.llama(x)
+            x = self.llama_dim_mapper2(x)
+        
         # print(">>>5 ", x.shape)
         x = self.norm(x)
         # concat_f = torch.cat([x[:,0], x[:, 1:].max(1)[0]], dim = -1)
